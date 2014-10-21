@@ -43,12 +43,13 @@ public class Archivo {
                                                                     
         HashMap <String, Integer> contadorPalabras  = new HashMap <>();
         
-        Scanner sc = new Scanner(f);
+        Scanner sc = new Scanner(f, "ISO-8859-1");
 //        sc.useDelimiter(" ").useDelimiter(".").useDelimiter(",");
         
         sc.useDelimiter("[^a-zA-ZñÑá-úÁ-Ú]");
         
-        while(sc.hasNext()){
+        while(sc.hasNext())
+        {            
             String palabra = sc.next();
             
             Integer i = contadorPalabras.get(palabra);
@@ -58,6 +59,7 @@ public class Archivo {
             else
                 contadorPalabras.put(palabra, i+1);
         }
+        //System.out.println(contadorPalabras.toString());
         return contadorPalabras;
     }   
     

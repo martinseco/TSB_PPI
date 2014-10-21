@@ -21,8 +21,8 @@ public class mainPrueba {
     public static void main (String args[]) throws SQLException, FileNotFoundException
     {
      
-      Archivo a = new Archivo("prueba.txt");
-      Insercion i = new Insercion("prueba.txt");
+      Archivo a = new Archivo("16082-8.txt");
+      Insercion i = new Insercion("16082-8.txt");
       i.procesar(a.mapaPalabras());
     }    
 }
