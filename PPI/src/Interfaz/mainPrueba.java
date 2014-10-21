@@ -7,6 +7,9 @@
 package Interfaz;
 
 import BD.Conexion;
+import BD.Insercion;
+import Tratamiento.Archivo;
+import java.io.FileNotFoundException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -15,13 +18,11 @@ import java.sql.SQLException;
  * @author Martin
  */
 public class mainPrueba {
-    public static void main (String args[]) throws SQLException
+    public static void main (String args[]) throws SQLException, FileNotFoundException
     {
      
-        Conexion con = new Conexion();
-        ResultSet rs = con.tabla("Documento");
-        
-        System.out.println(rs.toString());
-        
+      Archivo a = new Archivo("prueba.txt");
+      Insercion i = new Insercion("prueba.txt");
+      i.procesar(a.mapaPalabras());
     }    
 }

@@ -39,7 +39,7 @@ public class Archivo {
     //que se encuentren un el conjunto de archivos que seleccione el usuario.
     
     //HASHMAP DE LAS PALABRAS EN EL ARCHIVO.
-    private HashMap mapaPalabras() throws FileNotFoundException{//corregir bien despues, verificar file no nula.Corregir delimiter.
+    public HashMap mapaPalabras() throws FileNotFoundException{//corregir bien despues, verificar file no nula.Corregir delimiter.
                                                                     
         HashMap <String, Integer> contadorPalabras  = new HashMap <>();
         
