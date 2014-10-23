@@ -48,7 +48,7 @@ public class Archivo {
         
         sc.useDelimiter("[^a-zA-ZñÑá-úÁ-Ú]");
         
-        System.out.println(sc.hasNext());
+        
         while(sc.hasNext()){
             String palabra = sc.next();
             

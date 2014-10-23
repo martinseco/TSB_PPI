@@ -1,4 +1,5 @@
 The Project Gutenberg EBook of Angelina, by Rafael Delgado
+<<<<<<< HEAD
 This eBook is for the use of anyone anywhere at no cost and with
 
 almost no restrictions whatsoever.  You may copy it, give it away or
@@ -6,3 +7,109 @@ re-use it under the terms of the Project Gutenberg License included
 with this eBook or online at www.gutenberg.net
 Title: Angelina
        (novela mexicana)
+=======
+
+This eBook is for the use of anyone anywhere at no cost and with
+almost no restrictions whatsoever.  You may copy it, give it away or
+re-use it under the terms of the Project Gutenberg License included
+with this eBook or online at www.gutenberg.net
+
+
+Title: Angelina
+       (novela mexicana)
+
+Author: Rafael Delgado
+
+Release Date: June 17, 2005 [EBook #16082]
+
+Language: Spanish
+
+Character set encoding: ISO-8859-1
+
+*** START OF THIS PROJECT GUTENBERG EBOOK ANGELINA ***
+
+
+
+
+Produced by David Starner, Chuck Greif and the Online
+Distributed Proofreading Team.
+
+
+
+
+
+
+
+
+Colección de Escritores Americanos dirigida por Ventura García Calderón.
+
+XI
+
+
+
+
+ANGELINA
+
+(NOVELA MEXICANA)
+
+
+POR
+
+RAFAEL DELGADO
+
+Con un estudio preliminar de V. GARCÍA CALDERÓN
+
+CASA EDITORIAL MAUCCI
+
+Gran medalla en las Exposiciones de Viena de 1903, Madrid 1907, Budapest
+1907 y gran premio en la de Buenos Aires 1910.
+
+Calle de Mallorca, 166.--BARCELONA
+ES PROPIEDAD DE ESTA CASA EDITORIAL
+
+AL
+
+Sr. D. José M. Roa Bárcena
+en prenda de respetuosa amistad,
+
+EL AUTOR
+
+
+[Ilustración]
+
+
+
+
+RAFAEL DELGADO Y SU NOVELA _ANGELINA_
+
+
+Con este libro obtuvo el gran novelista mexicano el más sonado éxito;
+con él hemos querido propagar en América su nombre[*]. En sus armoniosas
+páginas reconocemos un acento nuestro. Allí revive y se prolonga la
+musical historia de _María_.
+
+[Nota *: A la exquisita amabilidad del eminente abogado mexicano, Don
+Miguel Hernández Sáuregui, heredero de los derechos del novelista,
+debemos la autorización para publicar este libro.]
+
+No sé si, como aseguran cuerdos jueces, volvemos en América al
+romanticismo de Espronceda, si otra vez repetiremos el «románticos
+somos» de Rubén Darío, del Rubén envejecido y suspirando por la juventud
+que se acabó. Retorno encantador que sería solo censurable si
+romanticismo significara otra vez el tumulto forense de una poesía
+callejera; mas no si regresáramos, por los collados de Bécquer, al
+reclamo lunático, al epitalamio triste del ruiseñor y la noche. Son
+_rimas_ nuevas algunos cantos de Darío y en ciertas _arias_ de Jiménez,
+que sedujeron a América, toda la Sevilla becqueriana está con sus
+divinos suspirantes y la guitarra de luto.
+
+En tales libros han aprendido a amar y a delirar nuestras mujeres. Por
+ellos son abnegadas víctimas del cruel amor e incomparables amantes. Son
+Elviras y no han cesado de ser Julietas. Y en ese coro de vivientes
+pasionarias, tan americano, tan nuestro, en la sentimental alegoría de
+la poesía sin ventura, yo creo que la mexicana y la colombiana vienen
+juntas. La Angelina de este libro está, silvestre y coronada, con
+María....
+
+
+>>>>>>> 1f1741992dfe1203bf2c622b59716858870322b3

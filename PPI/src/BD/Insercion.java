@@ -40,18 +40,28 @@ public class Insercion {
         HashMap <String, Integer> palabrasArchivo  = contadorPalabras;
         String sql = "";
         
-        for (String key : palabrasArchivo.keySet()) {
-            
-            sql = "INSERT OR REPLACE INTO Palabra (palabra, cantidad) "; 
-            sql += "VALUES ('";
-            sql += key + "',(COALESCE((SELECT cantidad FROM palabra WHERE palabra LIKE '" + key + "') + '" ;
-            sql += palabrasArchivo.get(key) + "', '" + palabrasArchivo.get(key) +"')))";
-            
-            stmt.executeUpdate(sql);
-            
+        try
+        {
+            c.setAutoCommit(false);
+            for (String key : palabrasArchivo.keySet()) 
+            {            
+                sql = "INSERT OR REPLACE INTO Palabra (palabra, cantidad) "; 
+                sql += "VALUES ('";
+                sql += key + "',(COALESCE((SELECT cantidad FROM palabra WHERE palabra LIKE '" + key + "') + '" ;
+                sql += palabrasArchivo.get(key) + "', '" + palabrasArchivo.get(key) +"')))";
+
+                stmt.executeUpdate(sql);  
+            }
+            c.commit();
+            c.setAutoCommit(true);
+        }catch(SQLException e) 
+        {
+            c.rollback();
         }
+        
+        stmt.close();
         c.close();
-        System.out.println(palabrasArchivo.toString());
+        
     }
     
     
