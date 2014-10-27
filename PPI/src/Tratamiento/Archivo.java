@@ -50,7 +50,7 @@ public class Archivo {
         
         
         while(sc.hasNext()){
-            String palabra = sc.next();
+            String palabra = sc.next().toLowerCase();
             
             Integer i = contadorPalabras.get(palabra);
             if (i == null) {

@@ -9,8 +9,11 @@ package BD;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Vector;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -52,5 +55,53 @@ public class Conexion {
        
            stmt.close();
            c.close();
+       }
+       
+       
+       public DefaultTableModel buildTableModel()
+       {
+           try
+           {
+                ResultSet rs = this.obtenerTablaAMostrar();
+                ResultSetMetaData metaData = rs.getMetaData();
+
+                 // names of columns
+                 Vector<String> columnNames = new Vector<String>();
+                 int columnCount = metaData.getColumnCount();
+                 for (int column = 1; column <= columnCount; column++) 
+                 {
+                     columnNames.add(metaData.getColumnName(column));
+                 }
+
+                 // data of the table
+                 Vector<Vector<Object>> data = new Vector<Vector<Object>>();
+                 while (rs.next()) {
+                     Vector<Object> vector = new Vector<Object>();
+                     for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) 
+                     {
+                         vector.add(rs.getObject(columnIndex));
+                     }
+                     data.add(vector);
+                 }
+           return new DefaultTableModel(data, columnNames);
+           }
+           catch(Exception e){return null;}
+           
+        
+
+       
+       }
+       
+       private ResultSet obtenerTablaAMostrar() throws SQLException
+       {
+           String sql ="";
+           
+           sql+= "SELECT palabra,COUNT(PxD.palabra_id), SUM(PxD.cantidad) FROM PalabraXDocumento PxD ";
+           sql += "INNER JOIN Palabra p ON p.id = PxD.palabra_id ";
+           sql += "GROUP BY palabra";
+           
+           c.createStatement();
+           return stmt.executeQuery(sql);
+       
        }
 }

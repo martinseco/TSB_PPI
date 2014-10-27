@@ -94,15 +94,11 @@ public class Insercion {
         {
             
            ResultSet rs;
-           key = key.toLowerCase();
             try {
-                System.out.println("Entro con: " + key);
                 rs = stmt.executeQuery("SELECT id FROM Palabra WHERE palabra = '" + key +"' LIMIT 1");
                 id = rs.getInt(1);
-                System.out.println(id);
                 }
            catch (SQLException ex) {
-               System.out.println("Salio con: " + key);
                 id = -1;
            }
            //UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='Palabra'
@@ -111,7 +107,6 @@ public class Insercion {
         else
         {
             ResultSet rs;
-            key = key.toLowerCase();
             try {
                 rs = stmt.executeQuery("SELECT id FROM Documento WHERE nombre = '" + key +"' LIMIT 1");
                 id = rs.getInt(1);

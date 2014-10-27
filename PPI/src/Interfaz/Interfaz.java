@@ -6,8 +6,11 @@
 
 package Interfaz;
 
+import BD.Conexion;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JTable;
 
 /**
  *
@@ -15,7 +18,7 @@ import java.util.logging.Logger;
  */
 public class Interfaz extends javax.swing.JFrame {
             Proceso p;
-            
+            Conexion c;
 
     /**
      * Creates new form Interfaz
@@ -23,6 +26,7 @@ public class Interfaz extends javax.swing.JFrame {
     public Interfaz() throws ClassNotFoundException {
         initComponents();
         Class.forName("org.sqlite.JDBC");
+        
     }
 
     /**
@@ -40,7 +44,7 @@ public class Interfaz extends javax.swing.JFrame {
         btn_buscar = new javax.swing.JButton();
         Listado = new javax.swing.JPanel();
         scrPane_panel = new javax.swing.JScrollPane();
-        grid_listado = new javax.swing.JTable();
+        grid_listado = new JTable(c.buildTableModel());
         Procesar = new javax.swing.JPanel();
         btn_procesar = new javax.swing.JButton();
 
@@ -74,47 +78,9 @@ public class Interfaz extends javax.swing.JFrame {
         Listado.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         grid_listado.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        grid_listado.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Palabra", "Frecuencia", "Cantidad Archivos", "Lenguaje"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, true, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
+        grid_listado.setColumnSelectionAllowed(true);
         scrPane_panel.setViewportView(grid_listado);
+        grid_listado.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
         javax.swing.GroupLayout ListadoLayout = new javax.swing.GroupLayout(Listado);
         Listado.setLayout(ListadoLayout);
@@ -241,11 +207,13 @@ public class Interfaz extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+                
                 try {
                     new Interfaz().setVisible(true);
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                
             }
         });
     }
