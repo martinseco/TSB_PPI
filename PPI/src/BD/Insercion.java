@@ -39,52 +39,54 @@ public class Insercion {
         stmt = c.createStatement();
     }
     
-//DELETE FROM Palabra;
-//DELETE FROM Documento;
-//DELETE FROM PalabraXDocumento;
-//
-//UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='Palabra';
-//UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='Documento'
-    
     public void procesar(HashMap contadorPalabras) throws SQLException{
         
         this.conectar();
-        palabrasArchivo  = contadorPalabras;//Ver si va en el constructor o no.
+        palabrasArchivo  = contadorPalabras;
         String sql = "";
         int idDoc;
         int idPal;
+        boolean existeArch = true;
         
         try
         {
             idDoc = this.getId(nombreDoc, "Documento");
-            if(idDoc == -1)
+            
+            if(idDoc == -1)//Si no existe el documento, lo inserto
             {   
                 sql = this.insertDocumento();
                 stmt.executeUpdate(sql);
                 idDoc = this.getLastId("Documento");
+                existeArch = false;
             }            
             
             for (String key : palabrasArchivo.keySet()) 
             {  
-                //key = key.toLowerCase();
                 idPal = this.getId(key, "Palabra");
                 
-                if(idPal == -1)
+                if(idPal == -1)//Si no existe la palabra, la inserto
                 {
                     sql = this.insertarPalabra(key);
                     stmt.executeUpdate(sql);
                     idPal = this.getLastId("Palabra");
                 }
                 
-                sql = this.insertPD(idDoc, idPal, key);
-                stmt.executeUpdate(sql);                
+                if(existeArch)
+                    sql = this.updateCant(idDoc, idPal, key);//Armo querry para actualizar la cantidad de veces que aparece key en el documento, puede venir vacia                                        
+                
+                else
+                    sql = this.insertPalabraDocumento(idDoc, idPal, key);//Armo querry para insertar por primera vez en PalabrasXDocumento
+                
+                if(sql.length() > 0)
+                    stmt.executeUpdate(sql);                
             }
             
             c.commit();
             c.setAutoCommit(true);
+            
         }catch(SQLException e) 
         {
-            System.out.println("Sali por el SqlExc: "+e);
+            System.out.println("Error de SQL: "+e);
             c.rollback();
         }
         
@@ -95,7 +97,7 @@ public class Insercion {
     private int getId(String key, String tabla)
     {
         String sql = "";
-        int id = -1;
+        int id;
         
         if (key != null && !"".equals(key) && tabla.equals("Palabra")) 
         {            
@@ -108,25 +110,25 @@ public class Insercion {
             }
             catch (SQLException ex) 
             {
-                //System.out.println("Salio con: " + key);
                 id = -1;
             }            
         }
         else
         {
             ResultSet rs;
-            //key = key.toLowerCase();
-            try {
+            
+            try 
+            {
                 rs = stmt.executeQuery("SELECT id FROM Documento WHERE nombre = '" + key +"' LIMIT 1");
                 id = rs.getInt(1);
             }
-           catch (SQLException ex) {
-                id = -1;
-           }            
+            catch (SQLException ex) 
+            {
+                 id = -1;
+            }            
         }
        return id;
-    }
-    
+    }    
 
     private int getLastId(String tabla)
     {
@@ -134,11 +136,12 @@ public class Insercion {
         ResultSet rs;
         String sql = "SELECT MAX(id) FROM '" + tabla + "'";
         
-        try{
-            
+        try
+        {
             rs = stmt.executeQuery(sql);
             id = rs.getInt(1);
-        }catch(SQLException e)
+        }
+        catch(SQLException e)
         { 
             id = -1;
         }
@@ -146,6 +149,22 @@ public class Insercion {
         return id;
     }
     
+    private int getCantidad(int idDoc, int idPal)
+    {
+        int cant = 0;
+        ResultSet rs;
+        try 
+        {
+            rs = stmt.executeQuery("SELECT cantidad FROM PalabraXDocumento WHERE id_Palabra = "+ idPal + " AND id_Documento = " + idDoc + "");
+            cant = rs.getInt(1);
+        }
+        catch(SQLException e)
+        {
+            //Ver que mensaje entregar
+        }        
+        
+        return cant;       
+    }
     
     private String insertDocumento()
     {
@@ -163,7 +182,8 @@ public class Insercion {
     private String insertarPalabra(String key)
     {
         String sql ="";
-        if (key != null && !" ".equals(key)) {
+        if (key != null && !" ".equals(key)) 
+        {
              sql = "INSERT INTO Palabra (id,palabra) "; 
              sql += "VALUES ($next_id, '"+key+"')";
         }       
@@ -171,7 +191,7 @@ public class Insercion {
         return sql;
     }
     
-    private String insertPD(int idDoc, int idPal, String key)
+    private String insertPalabraDocumento(int idDoc, int idPal, String key)
     {
         String sql;
         
@@ -182,10 +202,17 @@ public class Insercion {
         return sql;
     }        
     
-   
-    
-    
-    
+   private String updateCant(int idDoc, int idPal, String key)
+   {
+        String sql = "";
+       
+        int cant = this.getCantidad(idDoc, idPal);
+        int cantNueva = palabrasArchivo.get(key);
+        if(cant > cantNueva || cant < cantNueva)//Si la cantidad de veces que la palabra aparece en el doc cambio desde el ultimo procesamiento, armo una querry para actualizar
+        {
+            sql = "UPDATE PalabraXDocumento SET cantidad=" + cantNueva + " WHERE id_Palabra=" + idPal +" AND id_Documento=" + idDoc +"";            
+        }    
             
-            
+        return sql;
+   }        
 }
