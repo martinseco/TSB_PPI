@@ -48,18 +48,20 @@ public class Archivo {
         
         sc.useDelimiter("[^a-zA-ZñÑá-úÁ-Ú]");
         
-        while(sc.hasNext())
-        {            
-            String palabra = sc.next();
+        
+        while(sc.hasNext()){
+            String palabra = sc.next().toLowerCase();
             
-            Integer i = contadorPalabras.get(palabra);
-            if (i == null) {
-                contadorPalabras.put(palabra, 1);
+            if(palabra.length() > 1 && !" ".equals(palabra))
+            {
+                Integer i = contadorPalabras.get(palabra);
+                if (i == null) {
+                    contadorPalabras.put(palabra, 1);
+                }
+                else
+                    contadorPalabras.put(palabra, i+1);
             }
-            else
-                contadorPalabras.put(palabra, i+1);
-        }
-        //System.out.println(contadorPalabras.toString());
+         }
         return contadorPalabras;
     }   
     
