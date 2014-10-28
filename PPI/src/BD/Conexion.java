@@ -13,6 +13,9 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -26,7 +29,8 @@ public class Conexion {
        
        public Conexion() throws SQLException{//creo conexion.
        
-           c = DriverManager.getConnection("jdbc:sqlite:BD.s3db");//Conexion con BD abierta.
+           c = DriverManager.getConnection("jdbc:sqlite:DBFinal.db");//Conexion con BD abierta.
+           JOptionPane.showMessageDialog(null, "BD Abierta Exitosamente");
        }
        /*Obtengo una tabla ResultSet completo de la tabla que mande como parámetro.
         Me sirve para obtener una tabla que luego pasara a ser un Mapa por cada tabla de la BD.
@@ -62,7 +66,7 @@ public class Conexion {
        {
            try
            {
-                ResultSet rs = this.obtenerTablaAMostrar();
+                ResultSet rs = this.consultaGrilla();
                 ResultSetMetaData metaData = rs.getMetaData();
 
                  // names of columns
@@ -92,16 +96,21 @@ public class Conexion {
        
        }
        
-       private ResultSet obtenerTablaAMostrar() throws SQLException
-       {
-           String sql ="";
-           
-           sql+= "SELECT palabra,COUNT(PxD.palabra_id), SUM(PxD.cantidad) FROM PalabraXDocumento PxD ";
-           sql += "INNER JOIN Palabra p ON p.id = PxD.palabra_id ";
-           sql += "GROUP BY palabra";
-           
-           c.createStatement();
-           return stmt.executeQuery(sql);
+      
        
+       public ResultSet consultaGrilla() throws SQLException 
+       {
+           ResultSet rs = null;
+           String sql = null;
+           
+           sql += "select palabra.palabra, SUM(PxD.cantidad), COUNT(PxD.id_Palabra) ";
+           sql += "from PalabraXDocumento PxD join palabra on palabra.id= PxD.id_Palabra ";
+           sql += "GROUP BY palabra.palabra";
+           stmt = c.prepareStatement(sql);
+           System.out.println("llegue");
+           rs = stmt.executeQuery(sql);
+           System.out.println(rs.next());
+           return rs;
+           
        }
 }

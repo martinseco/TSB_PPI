@@ -9,6 +9,7 @@ package Tratamiento;
 import BD.Conexion;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -43,7 +44,22 @@ public class Archivo {
                                                                     
         HashMap <String, Integer> contadorPalabras  = new HashMap <>();
         
-        Scanner sc = new Scanner(f, "ISO-8859-1");
+        Detector det = new Detector();
+        String encoding = "";
+        try
+        {
+            encoding = det.determinarEncoding(f);
+        }
+        catch(FileNotFoundException e)
+        {
+            //Archivo no encontrado
+        }
+        catch(IOException e)
+        {
+            //Error de IO
+        }
+        System.out.println(encoding);
+        Scanner sc = new Scanner(f, encoding);
 //        sc.useDelimiter(" ").useDelimiter(".").useDelimiter(",");
         
         sc.useDelimiter("[^a-zA-ZñÑá-úÁ-Ú]");
@@ -52,13 +68,16 @@ public class Archivo {
         while(sc.hasNext()){
             String palabra = sc.next().toLowerCase();
             
-            Integer i = contadorPalabras.get(palabra);
-            if (i == null) {
-                contadorPalabras.put(palabra, 1);
+            if(palabra.length() > 1 && !" ".equals(palabra))
+            {
+                Integer i = contadorPalabras.get(palabra);
+                if (i == null) {
+                    contadorPalabras.put(palabra, 1);
+                }
+                else
+                    contadorPalabras.put(palabra, i+1);
             }
-            else
-                contadorPalabras.put(palabra, i+1);
-        }
+         }
         return contadorPalabras;
     }   
     
