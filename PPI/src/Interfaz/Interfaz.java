@@ -19,6 +19,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -30,44 +32,56 @@ public class Interfaz extends javax.swing.JFrame {
             Connection c;
             Statement stmt;
             PreparedStatement pr;
-
+            DefaultTableModel dtm;
+            boolean estaVacia;
     /**
      * Creates new form Interfaz
      */
     public Interfaz() throws ClassNotFoundException, SQLException {
         initComponents();
         Class.forName("org.sqlite.JDBC");
-        cargarGrilla();
+        cargarGrilla(" ");
+        estaVacia = grid_listado.getRowCount() > 0;
+        txt_buscar.requestFocus();
+//        this.setDefaultLookAndFeelDecorated(true);
+        this.setLocationRelativeTo(null);
+//                try {
+//                    UIManager.setLookAndFeel("ch.randelshofer.quaqua.QuaquaLookAndFeel");
+//                } catch (InstantiationException ex) {
+//                    Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
+//                } catch (IllegalAccessException ex) {
+//                    Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
+//                } catch (UnsupportedLookAndFeelException ex) {
+//                    Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
+//                }
     }
     
     private void conectar() throws SQLException{//creo conexion.
        
            c = DriverManager.getConnection("jdbc:sqlite:DBFinal.db");//Conexion con BD abierta.
-           JOptionPane.showMessageDialog(null, "BD Abierta Exitosamente");
+           //JOptionPane.showMessageDialog(null, "BD Abierta Exitosamente");
        }
     
-    private ResultSet consultaGrilla()
+    private ResultSet consultaGrilla(String condicion)
        {
-           System.out.println(c.toString());
             ResultSet rs = null;
 
                 try {
-                    String sql = null;
+                    String sql = "";
                     
-//                    sql += "SELECT Palabra.palabra, SUM(PxD.cantidad), COUNT(PxD.id_Palabra) ";
-//                    sql += "FROM PalabraXDocumento PxD INNER JOIN Palabra on palabra.id= PxD.id_Palabra ";
-//                    sql += "GROUP BY Palabra.palabra";
+                    sql += "SELECT Palabra.palabra, SUM(PxD.cantidad), COUNT(PxD.id_Palabra) ";
+                    sql += "FROM PalabraXDocumento PxD INNER JOIN Palabra on palabra.id= PxD.id_Palabra ";
+                    //sql = "select * from consultagrilla";//Es el nombre de la vista
+                    if (condicion != null && !" ".equals(condicion) && !"".equals(condicion)) {
+                        sql += "where Palabra.palabra LIKE '" + condicion + "%' ";
+                    }
+                    sql += "GROUP BY Palabra.palabra";
                     
-                    sql = "select * from consultagrilla";//Es el nombre de la vista
-                    
-                    System.out.println("arme query");
                     pr = c.prepareStatement(sql);
                     
-                    System.out.println("prepare query");
                     
                     rs = pr.executeQuery();
                     
-                    System.out.println(rs.next());
                     
                 } catch (SQLException ex) {
                     System.out.println(ex);                }
@@ -75,13 +89,13 @@ public class Interfaz extends javax.swing.JFrame {
             return rs;
 
        }
-    public void cargarGrilla()
-    {
-        
+    public void cargarGrilla(String condicion)
+    {   
         try
         {
-                conectar();System.out.println("conecte");
-                ResultSet rs = consultaGrilla();//Obtengo RS a mostrar.
+                conectar();
+                
+                ResultSet rs = consultaGrilla(condicion);//Obtengo RS a mostrar.
                 ResultSetMetaData rsm= rs.getMetaData();//Obtengo info de las prop del RS
                 ArrayList<Object[]> resultado= new ArrayList<>();//Creo representacion de todas las filas de la tabla
                 while(rs.next())
@@ -94,7 +108,7 @@ public class Interfaz extends javax.swing.JFrame {
                     resultado.add(rows);//Añado toda una fila
                     
                 }
-                DefaultTableModel dtm = (DefaultTableModel)this.grid_listado.getModel();
+                dtm = (DefaultTableModel)this.grid_listado.getModel();
                 for (int i = 0; i < resultado.size(); i++)
                 {
                     dtm.addRow(resultado.get(i));//Añado las filas a mi JTable
@@ -105,6 +119,22 @@ public class Interfaz extends javax.swing.JFrame {
             JOptionPane.showConfirmDialog(this, "No se encontro nada");
         }
     }
+    
+    
+    public void limpiarGrilla()
+    {
+        //if (!estaVacia) {
+                dtm= (DefaultTableModel)this.grid_listado.getModel();
+                for (int i = 0; i < grid_listado.getRowCount(); i++) 
+                {
+                    dtm.removeRow(i);
+                    i-=1;
+               // }
+           //     System.out.println("T vacia");
+        }
+
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -128,6 +158,12 @@ public class Interfaz extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         Busqueda.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        txt_buscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_buscarKeyReleased(evt);
+            }
+        });
 
         btn_buscar.setText("Buscar");
 
@@ -164,6 +200,7 @@ public class Interfaz extends javax.swing.JFrame {
             }
         ));
         grid_listado.setColumnSelectionAllowed(true);
+        grid_listado.setDoubleBuffered(true);
         scrPane_panel.setViewportView(grid_listado);
         grid_listado.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
@@ -214,7 +251,7 @@ public class Interfaz extends javax.swing.JFrame {
         Background.setLayout(BackgroundLayout);
         BackgroundLayout.setHorizontalGroup(
             BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
+            .addGroup(BackgroundLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(Listado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -261,6 +298,12 @@ public class Interfaz extends javax.swing.JFrame {
         p.setVisible(true);
         
     }//GEN-LAST:event_btn_procesarActionPerformed
+
+    private void txt_buscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_buscarKeyReleased
+        // TODO add your handling code here:
+         this.limpiarGrilla();
+        this.cargarGrilla(txt_buscar.getText().toLowerCase());
+    }//GEN-LAST:event_txt_buscarKeyReleased
 
     /**
      * @param args the command line arguments

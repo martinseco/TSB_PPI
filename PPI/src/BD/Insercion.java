@@ -27,20 +27,18 @@ public class Insercion {
     private Connection c;
     private HashMap <String, Integer> palabrasArchivo;
     
-    public Insercion(String nombre){
+    public Insercion(){}
     
-        nombreDoc = nombre;
-    }
-    
-    public void conectar() throws SQLException{
+    private void conectar() throws SQLException{
         
         c = DriverManager.getConnection("jdbc:sqlite:DBFinal.db");//Conexion con BD abierta.
         c.setAutoCommit(false);
         stmt = c.createStatement();
     }
     
-    public void procesar(HashMap contadorPalabras) throws SQLException{
+    public void procesar(String nombreArch, HashMap contadorPalabras) throws SQLException{
         
+        nombreDoc = nombreArch;        
         this.conectar();
         palabrasArchivo  = contadorPalabras;
         String sql = "";

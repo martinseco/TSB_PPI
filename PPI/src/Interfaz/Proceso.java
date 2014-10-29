@@ -6,10 +6,12 @@
 
 package Interfaz;
 
+import BD.Insercion;
 import Tratamiento.Archivo;
 import java.awt.Component;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -76,30 +78,40 @@ public class Proceso extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jfc_procesarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jfc_procesarActionPerformed
-        // TODO add your handling code here:
         File [] archivos = jfc_procesar.getSelectedFiles();
         String path;
-        if (JFileChooser.APPROVE_OPTION == 0) 
+        Insercion insArch = new Insercion();
+        System.out.println(evt.getActionCommand());
+        
+       
+        
+        if(evt.getActionCommand() == JFileChooser.APPROVE_SELECTION)
         {
-            for (int i = 0; i < archivos.length; i++) {//Realizo el procedimiento para todos los archivos seleccionados
-                                                       //por el usuario.
-                path = archivos[i].getAbsolutePath();System.out.println(path);
+            for (int i = 0; i < archivos.length; i++) 
+            {//Realizo el procedimiento para todos los archivos seleccionados por el usuario.
+                                                      
+                path = archivos[i].getAbsolutePath();//System.out.println(path);
                 ar = new Archivo(path);
-//                try {
-//                    
-//                    
-//                    
-//                } catch (FileNotFoundException ex) {
-//                    System.out.println("Fichero no encontrado");
-//                }
+                try
+                {
+                    insArch.procesar(path,ar.mapaPalabras());
+                }
+                catch(SQLException e)
+                {System.out.println(e);}
             }
-        this.setVisible(false);
-           
+            
+            this.dispose();
+           i.limpiarGrilla();
+           i.cargarGrilla(" ");
         }
-        if (JFileChooser.CANCEL_OPTION == 1)
-        {
-            this.setVisible(false);
-        }
+        
+        else
+           {
+                this.dispose();        
+           }
+            
+        
+       
     }//GEN-LAST:event_jfc_procesarActionPerformed
 
     /**

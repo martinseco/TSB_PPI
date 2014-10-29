@@ -22,7 +22,7 @@ public class mainPrueba {
     {
      
       Archivo a = new Archivo("16082-8.txt");
-      Insercion i = new Insercion("16082-8.txt");
-      i.procesar(a.mapaPalabras());
+//      Insercion i = new Insercion("16082-8.txt");
+//      i.procesar(a.mapaPalabras());
     }    
 }
